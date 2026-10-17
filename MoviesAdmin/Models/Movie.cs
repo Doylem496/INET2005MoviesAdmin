@@ -35,6 +35,9 @@ namespace MoviesAdmin.Models
         [Required(ErrorMessage ="Enter NR if the movie was not rated by the MPAA")]
         public string MPAARating { get; set; } = string.Empty;
 
+        // [Required]
+        public string ImageURL { get; set; } = string.Empty;
+
 
     }
 }

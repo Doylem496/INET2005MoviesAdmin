@@ -2,24 +2,35 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
+using MoviesAdmin.Services;
+
 
 public class MoviesController : Controller
 {
+    // todo make image required 
     private readonly MoviesAdminContext _context;
 
-    public MoviesController(MoviesAdminContext context)
+    // change back to AzureStorageService if issues occur
+    private readonly AzureStorageService _blobService;
+
+    // change back to AzureStorageService if issues occur
+    public MoviesController(MoviesAdminContext context, AzureStorageService blobService)
     {
         _context = context;
+        _blobService = blobService;
     }
 
     // GET: MOVIES
     public async Task<IActionResult> Index()    
     {
-        var movie = await _context.Movie
-            // order by release date
-            .OrderByDescending(m => m.ReleaseDate)
+        // List<Movie> movie = await _context.Movie
+        List<Movie> movies = await _context.Movie
+        // var movie = await _context.Movie
+           // order by release date
+           .OrderByDescending(m => m.ReleaseDate)
             .ToListAsync();
-        return View(movie);
+        // change back to movie if you remove the list 
+        return View(movies);
     }
 
     // GET: MOVIES/Details/5
@@ -51,10 +62,13 @@ public class MoviesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseDate,RuntimeMinutes,CriticScore,UserScore,OriginCountry,Language,Synopsis,MPAARating")] Movie movie)
+    public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseDate,RuntimeMinutes,CriticScore,UserScore,OriginCountry,Language,Synopsis,MPAARating")] Movie movie, IFormFile imageFile)
     {
         if (ModelState.IsValid)
         {
+
+            string imageUrl = await _blobService.UploadFileAsync(imageFile, imageFile.FileName);
+            movie.ImageURL = imageUrl;
             _context.Add(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -83,7 +97,7 @@ public class MoviesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Genre,ReleaseDate,RuntimeMinutes,CriticScore,UserScore,OriginCountry,Language,Synopsis,MPAARating")] Movie movie)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Genre,ReleaseDate,RuntimeMinutes,CriticScore,UserScore,OriginCountry,Language,Synopsis,MPAARating, ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
         {

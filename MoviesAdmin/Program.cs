@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MoviesAdmin.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MoviesAdminContext") ?? throw new InvalidOperationException("Connection string 'MoviesAdminContext' not found.");
 
@@ -7,6 +9,7 @@ builder.Services.AddDbContext<MoviesAdminContext>(options => options.UseSqlServe
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<AzureStorageService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,3 +34,4 @@ app.MapControllerRoute(
 
 
 app.Run();
+
