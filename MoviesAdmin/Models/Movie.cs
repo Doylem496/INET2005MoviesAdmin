@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAdmin.Models
@@ -12,14 +13,14 @@ namespace MoviesAdmin.Models
 
 
         // foreign key
-        // [Display(name = "Genre")]
+        [DisplayName("Genre")]
         public int GenreId { get; set; }
      
         [ValidateNever]
         public Genre Genre { get; set; } = null!;
 
         // foreign key
-        // [Display(name = "Audience Rating")]
+        [DisplayName("Audience Rating")]
         public int AudienceRatingId { get; set; }
 
         [ValidateNever]
@@ -28,13 +29,21 @@ namespace MoviesAdmin.Models
         // not foreign keys
 
         [Required(ErrorMessage = "Release date is required")]
+        [DisplayName("Release Date")]
         public DateOnly ReleaseDate { get; set; }
 
+
         [Range(1, 900, ErrorMessage = "Invalid runtime range")]
+        [DisplayName("Runtime(Minutes)")]
         public int RuntimeMinutes { get; set; }
 
+
+
         [Required(ErrorMessage ="Country of Origin is required")]
+        [DisplayName("Country of Origin")]
         public string OriginCountry { get; set; } = string.Empty;
+
+
 
         [Required(ErrorMessage = "Primary Language is required")]
         public string Language { get; set; } = string.Empty;

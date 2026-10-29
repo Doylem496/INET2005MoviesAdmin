@@ -4,9 +4,9 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1 class="text-white">Create</h1>
 
-<h4>Movie</h4>
+<h4 class="text-white">Movie</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -25,7 +25,7 @@
             </div> 
             <div class="mb-3">
                 <label asp-for="AudienceRatingId" class="control-label text-white"></label>
-                <select asp-for="AudienceRatingId" class="form-select" asp-items="ViewBag.RatingList"></select>
+                <select asp-for="AudienceRatingId" class="form-select" asp-items="ViewBag.AudienceRatingId"></select>
                 <span asp-validation-for="AudienceRatingId" class="text-danger"></span>
             </div>
 
@@ -59,7 +59,7 @@
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label>Image Upload</label>
+                <label class ="text-white">Image Upload</label>
                 <input type ="file" id="imageFile" name="imageFile" />
             </div>
             <div class="mb-3">
