@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAdmin.Models
 {
@@ -9,19 +10,28 @@ namespace MoviesAdmin.Models
         [Required(ErrorMessage = "Title is Required")]
         public string Title { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Genre is Required")]
-        public string Genre { get; set; } = string.Empty;
 
+        // foreign key
+        // [Display(name = "Genre")]
+        public int GenreId { get; set; }
+     
+        [ValidateNever]
+        public Genre Genre { get; set; } = null!;
+
+        // foreign key
+        // [Display(name = "Audience Rating")]
+        public int AudienceRatingId { get; set; }
+
+        [ValidateNever]
+        public AudienceRating AudienceRating { get; set; } = null!;
+
+        // not foreign keys
+
+        [Required(ErrorMessage = "Release date is required")]
         public DateOnly ReleaseDate { get; set; }
 
         [Range(1, 900, ErrorMessage = "Invalid runtime range")]
         public int RuntimeMinutes { get; set; }
-
-        [Range(0,100, ErrorMessage = "Critic score must be between 0 and 100")]
-        public double CriticScore { get; set; }
-
-        [Range(0,100, ErrorMessage = "User score must be between 0 and 100")]
-        public double UserScore { get; set; }
 
         [Required(ErrorMessage ="Country of Origin is required")]
         public string OriginCountry { get; set; } = string.Empty;
@@ -31,9 +41,6 @@ namespace MoviesAdmin.Models
 
         [Required(ErrorMessage ="Synopsis is required")]
         public string Synopsis { get; set; } = string.Empty;
-
-        [Required(ErrorMessage ="Enter NR if the movie was not rated by the MPAA")]
-        public string MPAARating { get; set; } = string.Empty;
 
         // [Required]
         public string ImageURL { get; set; } = string.Empty;

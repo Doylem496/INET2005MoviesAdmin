@@ -15,20 +15,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
-            </th>
+             
+                <th>
+                @Html.DisplayNameFor(model => model.Genre.Title)
+            </th> 
             <th>
                 @Html.DisplayNameFor(model => model.ReleaseDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RuntimeMinutes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CriticScore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserScore)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OriginCountry)
@@ -40,7 +35,7 @@
                 @Html.DisplayNameFor(model => model.Synopsis)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MPAARating)
+                @Html.DisplayNameFor(model => model.AudienceRating.Title)
             </th>
             <th></th>
         </tr>
@@ -54,9 +49,9 @@
             <td>
                 @Html.DisplayFor(model => item.Title)
             </td>
-            <td>
-                @Html.DisplayFor(model => item.Genre)
-            </td>
+             <td>
+                @Html.DisplayFor(model => item.Genre.Title)
+            </td> 
             <td>
                 @Html.DisplayFor(model => item.ReleaseDate)
             </td>
@@ -64,11 +59,11 @@
                 @Html.DisplayFor(model => item.RuntimeMinutes)
             </td>
             <td>
-                @Html.DisplayFor(model => item.CriticScore)
+            @*     @Html.DisplayFor(model => item.CriticScore)
             </td>
             <td>
                 @Html.DisplayFor(model => item.UserScore)
-            </td>
+            </td> *@
             <td>
                 @Html.DisplayFor(model => item.OriginCountry)
             </td>
@@ -79,7 +74,7 @@
                 @Html.DisplayFor(model => item.Synopsis)
             </td>
             <td>
-                @Html.DisplayFor(model => item.MPAARating)
+                @Html.DisplayFor(model => item.AudienceRating.Title)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

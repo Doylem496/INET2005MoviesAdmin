@@ -1,9 +1,12 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
 using MoviesAdmin.Services;
 
+// this will redirect you to login if you try and enter movies, genre etc.
 
 public class MoviesController : Controller
 {
@@ -52,8 +55,15 @@ public class MoviesController : Controller
     }
 
     // GET: MOVIES/Create
+    // make this just for crud operations?
+    // [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
+        // new element, comment out until scaffolding done?
+        var audienceRatings = _context.AudienceRatings.ToList();
+        ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
+        var genres = _context.Genres.ToList();
+        ViewBag.GenreId = new SelectList(genres, "Id", "Title");
         return View();
     }
 
@@ -62,12 +72,21 @@ public class MoviesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseDate,RuntimeMinutes,CriticScore,UserScore,OriginCountry,Language,Synopsis,MPAARating")] Movie movie, IFormFile imageFile)
+
+    // changed genre to GenreId. Change back if broken
+
+    // make this just for crud operations?
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create([Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRating")] Movie movie, IFormFile imageFile)
     {
         if (ModelState.IsValid)
         {
 
-            string imageUrl = await _blobService.UploadFileAsync(imageFile, imageFile.FileName);
+            var extension = Path.GetExtension(imageFile!.FileName);
+            var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+            string imageUrl = await _blobService.UploadFileAsync(imageFile, uniqueFileName);
+            // replaced to utilize guid unique url
+            // string imageUrl = await _blobService.UploadFileAsync(imageFile, imageFile.FileName);
             movie.ImageURL = imageUrl;
             _context.Add(movie);
             await _context.SaveChangesAsync();
@@ -77,6 +96,8 @@ public class MoviesController : Controller
     }
 
     // GET: MOVIES/Edit/5
+    // make this just for crud operations?
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -97,7 +118,10 @@ public class MoviesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Genre,ReleaseDate,RuntimeMinutes,CriticScore,UserScore,OriginCountry,Language,Synopsis,MPAARating, ImageUrl")] Movie movie)
+
+    // make this just for crud operations?
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRating,ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
         {
@@ -128,6 +152,9 @@ public class MoviesController : Controller
     }
 
     // GET: MOVIES/Delete/5
+
+    // make this just for crud operations?
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -145,7 +172,9 @@ public class MoviesController : Controller
         return View(movie);
     }
 
-    // POST: MOVIES/Delete/5
+    // make this just for crud operations?
+    // [Authorize(Roles = "Admin")]
+
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)

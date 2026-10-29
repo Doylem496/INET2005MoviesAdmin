@@ -14,64 +14,49 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">
-                <label asp-for="Title" class="form-label text-white"></label>
+                <label asp-for="Title" class="control label text-white"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-
             <div class="mb-3">
-                <label asp-for="Genre" class="form-label text-white"></label>
-                <input asp-for="Genre" class="form-control " />
-                <span asp-validation-for="Genre" class="text-danger"></span>
+                <label asp-for="GenreId" class="control-label text-white"></label>
+                <select asp-for="GenreId" class="form-select" asp-items="ViewBag.GenreId"></select>
+                <span asp-validation-for="GenreId" class="text-danger"></span>
+            </div> 
+            <div class="mb-3">
+                <label asp-for="AudienceRatingId" class="control-label text-white"></label>
+                <select asp-for="AudienceRatingId" class="form-select" asp-items="ViewBag.RatingList"></select>
+                <span asp-validation-for="AudienceRatingId" class="text-danger"></span>
             </div>
 
+
             <div class="mb-3">
-                <label asp-for="ReleaseDate" class="form-label text-white"></label>
+                <label asp-for="ReleaseDate" class="control-label text-white"></label>
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="RuntimeMinutes" class="form-label text-white"></label>
+                <label asp-for="RuntimeMinutes" class="control-label text-white"></label>
                 <input asp-for="RuntimeMinutes" class="form-control" />
                 <span asp-validation-for="RuntimeMinutes" class="text-danger"></span>
             </div>
-
             <div class="mb-3">
-                <label asp-for="CriticScore" class="form-label text-white"></label>
-                <input asp-for="CriticScore" class="form-control" />
-                <span asp-validation-for="CriticScore" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="UserScore" class="form-label text-white"></label>
-                <input asp-for="UserScore" class="form-control" />
-                <span asp-validation-for="UserScore" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="OriginCountry" class="form-label text-white"></label>
+                <label asp-for="OriginCountry" class="control-label text-white"></label>
                 <input asp-for="OriginCountry" class="form-control" />
                 <span asp-validation-for="OriginCountry" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Language" class="form-label text-white"></label>
+                <label asp-for="Language" class="control-label text-white"></label>
                 <input asp-for="Language" class="form-control" />
                 <span asp-validation-for="Language" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Synopsis" class="form-label text-white"></label>
-                @* <input asp-for="Synopsis" class="form-control" /> *@
+                <label asp-for="Synopsis" class="control-label text-white"></label>
                 <textarea asp-for="Synopsis" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="MPAARating" class="form-label text-white"></label>
-                <input asp-for="MPAARating" class="form-control" />
-                <span asp-validation-for="MPAARating" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label>Image Upload</label>

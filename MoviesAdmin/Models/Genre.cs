@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAdmin.Models
 {
@@ -7,7 +9,13 @@ namespace MoviesAdmin.Models
         
         public int Id { get; set; }
 
+
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;
+
+        [ValidateNever]
+        public List<Movie> Movies { get; set; } = new List<Movie>();
+
+
     }
 }
