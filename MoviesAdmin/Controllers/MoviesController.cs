@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MoviesAdmin;
 using MoviesAdmin.Models;
 using MoviesAdmin.Services;
 
@@ -13,10 +14,8 @@ public class MoviesController : Controller
     // todo make image required 
     private readonly MoviesAdminContext _context;
 
-    // change back to AzureStorageService if issues occur
     private readonly AzureStorageService _blobService;
 
-    // change back to AzureStorageService if issues occur
     public MoviesController(MoviesAdminContext context, AzureStorageService blobService)
     {
         _context = context;
@@ -26,13 +25,19 @@ public class MoviesController : Controller
     // GET: MOVIES
     public async Task<IActionResult> Index()    
     {
-        // List<Movie> movie = await _context.Movie
+        // comment out for troubleshooting 
+        var user = User.GetUserId();
+        if (user != null)
+        {
+            Console.WriteLine(user);
+        }
         List<Movie> movies = await _context.Movie
-        // var movie = await _context.Movie
-           // order by release date
+            .Include(m => m.Genre)
+            .Include(m => m.AudienceRating)
+
            .OrderByDescending(m => m.ReleaseDate)
             .ToListAsync();
-        // change back to movie if you remove the list 
+        
         return View(movies);
     }
 
@@ -68,8 +73,6 @@ public class MoviesController : Controller
     }
 
     // POST: MOVIES/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
 
@@ -77,7 +80,7 @@ public class MoviesController : Controller
 
     // make this just for crud operations?
     // [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create([Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRating")] Movie movie, IFormFile imageFile)
+    public async Task<IActionResult> Create([Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId")] Movie movie, IFormFile imageFile)
     {
         if (ModelState.IsValid)
         {
@@ -114,14 +117,13 @@ public class MoviesController : Controller
     }
 
     // POST: MOVIES/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
     [HttpPost]
     [ValidateAntiForgeryToken]
 
     // make this just for crud operations?
     // [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRating,ImageUrl")] Movie movie)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId,ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
         {

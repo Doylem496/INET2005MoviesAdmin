@@ -17,6 +17,7 @@ namespace MoviesAdmin.Models
         public int GenreId { get; set; }
      
         [ValidateNever]
+        //[ScaffoldColumn(false)]
         public Genre Genre { get; set; } = null!;
 
         // foreign key
@@ -24,7 +25,13 @@ namespace MoviesAdmin.Models
         public int AudienceRatingId { get; set; }
 
         [ValidateNever]
+        //[ScaffoldColumn(false)]
         public AudienceRating AudienceRating { get; set; } = null!;
+
+        // navigation property
+        //[ValidateNever]
+        //[ScaffoldCloumn(false)]
+        //public List<CriticReview> Reviews { get; set; } = new List<CriticReview>();
 
         // not foreign keys
 
@@ -42,8 +49,6 @@ namespace MoviesAdmin.Models
         [Required(ErrorMessage ="Country of Origin is required")]
         [DisplayName("Country of Origin")]
         public string OriginCountry { get; set; } = string.Empty;
-
-
 
         [Required(ErrorMessage = "Primary Language is required")]
         public string Language { get; set; } = string.Empty;

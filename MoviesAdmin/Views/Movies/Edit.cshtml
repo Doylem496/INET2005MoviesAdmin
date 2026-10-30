@@ -4,65 +4,72 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1 class="text-white">Edit</h1>
 
-<h4>Movie</h4>
+<h4 class="text-white">Movie</h4>
 <hr />
-<div class="row">
+<div class="row text-white">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-group" />
+                <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            @* <div class="form-group">
-                <label asp-for="Genre" class="control-label"></label>
-                <input asp-for="Genre" class="form-group" />
-                <span asp-validation-for="Genre" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
+            @{
+            //     <div class="form-group">
+            //     <label asp-for="Genre" class="control-label"></label>
+            //     <input asp-for="Genre" class="form-group" />
+            //     <span asp-validation-for="Genre" class="text-danger"></span>
+            // </div>
+        }
+            <div class="mb-3">
+                <label asp-for="GenreId" class="control-label text-white"></label>
+                <select asp-for="GenreId" class="form-select" asp-items="ViewBag.GenreId"></select>
+                <span asp-validation-for="GenreId" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
                 <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-group" />
+                <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label asp-for="RuntimeMinutes" class="control-label"></label>
-                <input asp-for="RuntimeMinutes" class="form-group" />
+                <input asp-for="RuntimeMinutes" class="form-control" />
                 <span asp-validation-for="RuntimeMinutes" class="text-danger"></span>
             </div>
-            @* <div class="form-group">
-                <label asp-for="CriticScore" class="control-label"></label>
-                <input asp-for="CriticScore" class="form-group" />
-                <span asp-validation-for="CriticScore" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserScore" class="control-label"></label>
-                <input asp-for="UserScore" class="form-group" />
-                <span asp-validation-for="UserScore" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
+
+            <div class="mb-3">
                 <label asp-for="OriginCountry" class="control-label"></label>
-                <input asp-for="OriginCountry" class="form-group" />
+                <input asp-for="OriginCountry" class="form-control" />
                 <span asp-validation-for="OriginCountry" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label asp-for="Language" class="control-label"></label>
-                <input asp-for="Language" class="form-group" />
+                <input asp-for="Language" class="form-control" />
                 <span asp-validation-for="Language" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label asp-for="Synopsis" class="control-label"></label>
-                <input asp-for="Synopsis" class="form-group" />
+                <input asp-for="Synopsis" class="form-control" rows="5" />
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AudienceRating" class="control-label"></label>
-                <input asp-for="AudienceRating" class="form-group" />
-                <span asp-validation-for="AudienceRating" class="text-danger"></span>
+            @{
+                // <div class="form-group">
+                //     <label asp-for="AudienceRating" class="control-label"></label>
+                //     <input asp-for="AudienceRating" class="form-group" />
+                //     <span asp-validation-for="AudienceRating" class="text-danger"></span>
+                // </div>
+            }
+            <div class="mb-3">
+                <label asp-for="AudienceRatingId" class="control-label text-white"></label>
+                <select asp-for="AudienceRatingId" class="form-select" asp-items="ViewBag.AudienceRatingId"></select>
+                <span asp-validation-for="AudienceRatingId" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
