@@ -17,7 +17,7 @@ namespace MoviesAdmin.Models
         public int GenreId { get; set; }
      
         [ValidateNever]
-        //[ScaffoldColumn(false)]
+        [ScaffoldColumn(false)]
         public Genre Genre { get; set; } = null!;
 
         // foreign key
@@ -25,13 +25,13 @@ namespace MoviesAdmin.Models
         public int AudienceRatingId { get; set; }
 
         [ValidateNever]
-        //[ScaffoldColumn(false)]
+        [ScaffoldColumn(false)]
         public AudienceRating AudienceRating { get; set; } = null!;
 
         // navigation property
-        //[ValidateNever]
-        //[ScaffoldCloumn(false)]
-        //public List<CriticReview> Reviews { get; set; } = new List<CriticReview>();
+        [ValidateNever]
+        [ScaffoldColumn(false)]
+        public List<CriticReview> CriticReviews { get; set; } = new List<CriticReview>();
 
         // not foreign keys
 
@@ -56,7 +56,7 @@ namespace MoviesAdmin.Models
         [Required(ErrorMessage ="Synopsis is required")]
         public string Synopsis { get; set; } = string.Empty;
 
-        // [Required]
+        [Required]
         public string ImageURL { get; set; } = string.Empty;
 
 

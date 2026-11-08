@@ -8,7 +8,7 @@ using MoviesAdmin.Models;
 using MoviesAdmin.Services;
 
 // this will redirect you to login if you try and enter movies, genre etc.
-
+[Authorize]
 public class MoviesController : Controller
 {
     // todo make image required 
@@ -50,21 +50,25 @@ public class MoviesController : Controller
         }
 
         var movie = await _context.Movie
+            .Include(m => m.CriticReviews)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (movie == null)
         {
             return NotFound();
         }
-
+        var audienceRatings = _context.AudienceRatings.ToList();
+        ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
+        var genres = _context.Genres.ToList();
+        ViewBag.GenreId = new SelectList(genres, "Id", "Title");
         return View(movie);
     }
 
     // GET: MOVIES/Create
     // make this just for crud operations?
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
-        // new element, comment out until scaffolding done?
+        
         var audienceRatings = _context.AudienceRatings.ToList();
         ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
         var genres = _context.Genres.ToList();
@@ -76,10 +80,10 @@ public class MoviesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
 
-    // changed genre to GenreId. Change back if broken
+    
 
-    // make this just for crud operations?
-    // [Authorize(Roles = "Admin")]
+    
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId")] Movie movie, IFormFile imageFile)
     {
         if (ModelState.IsValid)
@@ -88,8 +92,6 @@ public class MoviesController : Controller
             var extension = Path.GetExtension(imageFile!.FileName);
             var uniqueFileName = $"{Guid.NewGuid()}{extension}";
             string imageUrl = await _blobService.UploadFileAsync(imageFile, uniqueFileName);
-            // replaced to utilize guid unique url
-            // string imageUrl = await _blobService.UploadFileAsync(imageFile, imageFile.FileName);
             movie.ImageURL = imageUrl;
             _context.Add(movie);
             await _context.SaveChangesAsync();
@@ -100,7 +102,7 @@ public class MoviesController : Controller
 
     // GET: MOVIES/Edit/5
     // make this just for crud operations?
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -113,6 +115,11 @@ public class MoviesController : Controller
         {
             return NotFound();
         }
+
+        var audienceRatings = _context.AudienceRatings.ToList();
+        ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
+        var genres = _context.Genres.ToList();
+        ViewBag.GenreId = new SelectList(genres, "Id", "Title");
         return View(movie);
     }
 
@@ -121,8 +128,8 @@ public class MoviesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
 
-    // make this just for crud operations?
-    // [Authorize(Roles = "Admin")]
+    
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId,ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
@@ -150,13 +157,19 @@ public class MoviesController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+        // remove if issues arise
+        var audienceRatings = _context.AudienceRatings.ToList();
+        ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
+        var genres = _context.Genres.ToList();
+        ViewBag.GenreId = new SelectList(genres, "Id", "Title");
+
         return View(movie);
     }
 
     // GET: MOVIES/Delete/5
 
-    // make this just for crud operations?
-    // [Authorize(Roles = "Admin")]
+    
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -175,10 +188,11 @@ public class MoviesController : Controller
     }
 
     // make this just for crud operations?
-    // [Authorize(Roles = "Admin")]
+    
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var movie = await _context.Movie.FindAsync(id);
