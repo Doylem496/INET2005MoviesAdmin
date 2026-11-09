@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
 
 
-// [Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 public class AudienceRatingsController : Controller
 {
     private readonly MoviesAdminContext _context;

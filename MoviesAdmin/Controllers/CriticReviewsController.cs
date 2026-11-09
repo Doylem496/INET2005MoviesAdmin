@@ -33,8 +33,9 @@ public class CriticReviewsController : Controller
     // GET: CRITICREVIEWS
     public async Task<IActionResult> Index()    
     {
-        // double check 
+        
         var reviews = await _context.CriticReviews
+            // how users see their own reviews
             .Where(m => m.CreatedBy == _userId)
             .Include(m => m.Movie)
             .ToListAsync();
@@ -52,16 +53,21 @@ public class CriticReviewsController : Controller
             return NotFound();
         }
 
-        var criticreview = await _context.CriticReviews
+        var criticReview = await _context.CriticReviews
             .Where(m => m.CreatedBy == _userId)
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        if (criticreview == null)
+        if (criticReview == null)
+        {
+            return NotFound();
+        }
+        // so users can't modify other user's reviews
+        if (criticReview.CreatedBy != _userId)
         {
             return NotFound();
         }
 
-        return View(criticreview);
+        return View(criticReview);
     }
 
     // GET: CRITICREVIEWS/Create
@@ -75,9 +81,6 @@ public class CriticReviewsController : Controller
     // POST: CRITICREVIEWS/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-
-    // Remove Movie and keep MovieId?
-    // remove created date and created by? The user doesn't need to answer these
     public async Task<IActionResult> Create([Bind("Id,MovieId,Description,StarRating,IsPublished")] CriticReview criticReview)
     {
         // double check this!
@@ -90,6 +93,17 @@ public class CriticReviewsController : Controller
 
         if (ModelState.IsValid)
         {
+            // check if they already reviewed, compare movieId and CreatedBy properties past and current 
+            // anyAsync is for checking collections for specific elements
+            bool alreadyReviewed = await _context.CriticReviews.AnyAsync(m => m.MovieId == criticReview.MovieId &&
+            m.CreatedBy == _userId);
+
+            if (alreadyReviewed)
+            {
+                ModelState.AddModelError("", "Users can only post one review per movie");
+                return View(criticReview);
+            }
+
             _context.Add(criticReview);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -105,37 +119,43 @@ public class CriticReviewsController : Controller
             return NotFound();
         }
 
-        var criticreview = await _context.CriticReviews.FindAsync(id);
-        if (criticreview == null)
+        var criticReview = await _context.CriticReviews.FindAsync(id);
+        if (criticReview == null)
         {
             return NotFound();
         }
-        return View(criticreview);
+        // so users can't modify other user's reviews
+        if (criticReview.CreatedBy != _userId)
+        {
+            return NotFound();
+        }
+
+
+        return View(criticReview);
     }
 
     // POST: CRITICREVIEWS/Edit/5
   
     [HttpPost]
     [ValidateAntiForgeryToken]
-    
-    
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,MovieId,Description,StarRating,IsPublished,CreatedBy,CreatedDate")] CriticReview criticreview)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,MovieId,Description,StarRating,IsPublished")] CriticReview criticReview)
     {
-        if (id != criticreview.Id)
+        if (id != criticReview.Id)
         {
             return NotFound();
         }
+
 
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Update(criticreview);
+                _context.Update(criticReview);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CriticReviewExists(criticreview.Id))
+                if (!CriticReviewExists(criticReview.Id))
                 {
                     return NotFound();
                 }
@@ -146,7 +166,7 @@ public class CriticReviewsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(criticreview);
+        return View(criticReview);
     }
 
     // GET: CRITICREVIEWS/Delete/5

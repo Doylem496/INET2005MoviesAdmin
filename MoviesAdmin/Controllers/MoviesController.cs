@@ -86,6 +86,8 @@ public class MoviesController : Controller
         {
             ModelState.AddModelError("ImageFile", "Image of movie poster is required");
         }
+        // for validation 
+        ModelState.Remove(nameof(Movie.ImageURL));
 
         if (ModelState.IsValid)
         {
@@ -141,8 +143,19 @@ public class MoviesController : Controller
         {
             return NotFound();
         }
+
         // for validation 
         ModelState.Remove(nameof(Movie.ImageURL));
+
+        // doesn't track returned entities in change tracker
+        var currentMovie = await _context.Movie
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == movie.Id);
+
+        if (currentMovie == null)
+        {
+            return NotFound();
+        }
 
         if (ModelState.IsValid)
         {
@@ -152,6 +165,10 @@ public class MoviesController : Controller
                 var extension = Path.GetExtension(imageFile.FileName);
                 var uniqueFileName = $"{Guid.NewGuid()}{extension}";
                 movie.ImageURL = await _blobService.UploadFileAsync(imageFile,uniqueFileName);
+            }
+            else
+            {
+                movie.ImageURL = currentMovie.ImageURL;
             }
 
             try
