@@ -79,13 +79,14 @@ public class MoviesController : Controller
     // POST: MOVIES/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-
-    
-
-    
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create([Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId")] Movie movie, IFormFile imageFile)
+    public async Task<IActionResult> Create([Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId")] Movie movie, IFormFile? imageFile)
     {
+        if (imageFile == null)
+        {
+            ModelState.AddModelError("ImageFile", "Image of movie poster is required");
+        }
+
         if (ModelState.IsValid)
         {
 
@@ -97,6 +98,10 @@ public class MoviesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        var audienceRatings = _context.AudienceRatings.ToList();
+        ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
+        var genres = _context.Genres.ToList();
+        ViewBag.GenreId = new SelectList(genres, "Id", "Title");
         return View(movie);
     }
 
@@ -128,17 +133,27 @@ public class MoviesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
 
-    
+    // added imagefile argument 
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId,ImageUrl")] Movie movie)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,ReleaseDate,RuntimeMinutes,OriginCountry,Language,Synopsis,AudienceRatingId,ImageURL")] Movie movie, IFormFile? imageFile)
     {
         if (id != movie.Id)
         {
             return NotFound();
         }
+        // for validation 
+        ModelState.Remove(nameof(Movie.ImageURL));
 
         if (ModelState.IsValid)
         {
+            // added for editing images
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var extension = Path.GetExtension(imageFile.FileName);
+                var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+                movie.ImageURL = await _blobService.UploadFileAsync(imageFile,uniqueFileName);
+            }
+
             try
             {
                 _context.Update(movie);
@@ -157,7 +172,7 @@ public class MoviesController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        // remove if issues arise
+        
         var audienceRatings = _context.AudienceRatings.ToList();
         ViewBag.AudienceRatingId = new SelectList(audienceRatings, "Id", "Title");
         var genres = _context.Genres.ToList();
