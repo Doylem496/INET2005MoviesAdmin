@@ -10,5 +10,5 @@ public class MoviesAdminContext(DbContextOptions<MoviesAdminContext> options) : 
     
     public DbSet<MoviesAdmin.Models.CriticReview> CriticReviews { get; set; } = default!;
 
-    public DbSet<MoviesAdmin.Models.UserSnapshot> UserSnapshots { get; set; } = default!;
+    public DbSet<MoviesAdmin.Models.UserSnapshot> UserSnapshot { get; set; } = default!;
 }

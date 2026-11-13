@@ -16,7 +16,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<AzureStorageService>();
 
 //COMMENT IN AFTER MIGRATION 
-builder.Services.AddScoped<IUserSnapshotService, UserSnapshotService>();
 
 // for Auth0
 builder.Services.AddAuth0WebAppAuthentication(options =>
@@ -42,14 +41,16 @@ builder.Services.AddAuth0WebAppAuthentication(options =>
                     return;
 
                 var syncService = context.HttpContext.RequestServices
-                    .GetRequiredService<UserSnapshotService>();
+                    .GetRequiredService<IUserSnapshotService>();
 
                 await syncService.AddUserAsync(userId, email, name);
             }
         };
         // end of new block
-
+       
     });
+
+
 // for Auth0
 builder.Services.Configure<OpenIdConnectOptions>(Auth0Constants.AuthenticationScheme, options =>
 {
@@ -60,6 +61,9 @@ builder.Services.Configure<OpenIdConnectOptions>(Auth0Constants.AuthenticationSc
         
     };
 });
+
+
+builder.Services.AddScoped<IUserSnapshotService, UserSnapshotService>();
 
 
 var app = builder.Build();
